@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TiendaOnline.Common.Entities
+namespace TiendaOnline.Web.Models
 {
     public class Country
     {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TiendaOnline.Common.Entities;
+using TiendaOnline.Web.Models;
 
 namespace TiendaOnline.Web.Data
 {
@@ -17,6 +17,7 @@ namespace TiendaOnline.Web.Data
             modelBuilder.Entity<Country>()
                 .HasIndex(t => t.name)
                 .IsUnique();
+
         }
     }
 }
