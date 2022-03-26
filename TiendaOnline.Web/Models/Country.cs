@@ -4,11 +4,11 @@ namespace TiendaOnline.Web.Models
 {
     public class Country
     {
-        public int id { get; set; }
+        public int Id { get; set; }
         
         [Required]
         [MaxLength(20)]
-        public string name { get; set; }
+        public string Name { get; set; }
 
     }
 }

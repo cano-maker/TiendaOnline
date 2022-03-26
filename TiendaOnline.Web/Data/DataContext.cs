@@ -15,7 +15,7 @@ namespace TiendaOnline.Web.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Country>()
-                .HasIndex(t => t.name)
+                .HasIndex(t => t.Name)
                 .IsUnique();
 
         }
