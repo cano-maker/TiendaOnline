@@ -147,6 +147,8 @@ namespace TiendaOnline.Web.Controllers
 
 
             Country country = await _context.Countries
+                .Include(c => c.Departments)
+                .ThenInclude(d => d.Cities)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (country == null)
             {
@@ -198,7 +200,8 @@ namespace TiendaOnline.Web.Controllers
                     country.Departments.Add(department);
                     _context.Update(country);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction($"{nameof(Details)}/{country.Id}");
+                    return RedirectToAction($"{nameof(Details)}", new { id = country.Id});
+                    //return RedirectToAction($"{nameof(Details)}/{country.Id}");
                 }
                 catch (DbUpdateException dbUpdateException)
                 {
@@ -219,6 +222,94 @@ namespace TiendaOnline.Web.Controllers
             }
             return View(department);
         }
+
+        public async Task<IActionResult> EditDepartment(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            Department department = await _context.Departments.FindAsync(id);
+            if (department == null)
+            {
+                return NotFound();
+            }
+            Country country = await _context.Countries.FirstOrDefaultAsync(c => c.Departments.FirstOrDefault(d => d.Id == department.Id) != null);
+            department.IdCountry = country.Id;
+            return View(department);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditDepartment(Department department)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(department);
+                    await _context.SaveChangesAsync();
+                    var result = RedirectToAction(nameof(Details), new {id = department.IdCountry });
+                    //return RedirectToAction($"{nameof(DetailsDepartment)}/{department.IdCountry}");
+                    return result;
+                }
+                catch (DbUpdateException dbUpdateException)
+                {
+                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                    {
+                        ModelState.AddModelError(string.Empty, "There are a record with the same name.");
+                    }
+                    else
+                    {
+
+                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError(string.Empty, exception.Message);
+                }
+            }
+            return View(department);
+        }
+
+        public async Task<IActionResult> DeleteDepartment(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            Department department = await _context.Departments
+                .Include(d => d.Cities)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (department == null)
+            {
+                return NotFound();
+            }
+            Country country = await _context.Countries.FirstOrDefaultAsync(c => c.Departments.FirstOrDefault(d => d.Id == department.Id) != null);
+            _context.Departments.Remove(department);
+            await _context.SaveChangesAsync();
+            //return RedirectToAction($"{nameof(Details)}/{country.Id}");
+            return RedirectToAction($"{nameof(Details)}",new { id = country.Id } );
+        }
+
+        public async Task<IActionResult> DetailsDepartment(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            Department department = await _context.Departments
+                .Include(d => d.Cities)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (department == null)
+            {
+                return NotFound();
+            }
+            Country country = await _context.Countries.FirstOrDefaultAsync(c => c.Departments.FirstOrDefault(d => d.Id == department.Id) != null);
+            department.IdCountry = country.Id;
+            return View(department);
+        }
+
 
     }
 }

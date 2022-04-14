@@ -3,6 +3,14 @@
 @{
     ViewData["Title"] = "Details";
 }
+
+<link rel="stylesheet" type="text/css"
+href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+ <link rel="stylesheet" href="~/lib/font-awesome/css/fontawesome.css" />
+<link rel="stylesheet" href="~/lib/Font-Awesome/css/regular.min.css">
+<link rel="stylesheet" href="~/lib/Font-Awesome/css/solid.min.css">
+<br />
+
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 
 
@@ -64,12 +72,9 @@
                                     @Html.DisplayFor(modelItem => item.CitiesNumber)
                                 </td>
                                 <td>
-                                    <a asp-action="EditDepartment" asp-route-id="@item.Id" class="btn btnwarning"><i class="fas fa-edit"></i></a>
+                                    <a asp-action="EditDepartment" asp-route-id="@item.Id" class="btn btn-warning"><i class="fas fa-edit"></i></a>
                                     <a asp-action="DetailsDepartment" asp-route-id="@item.Id" class="btn btn-info"><i class="fas fa-align-justify"></i></a>
-                                    <button data-id="@item.Id" class="btn btn-danger deleteItem"
-                                        data-toggle="modal" data-target="#deleteDialog">
-                                        <i class="fas fatrash"></i>
-                                    </button>
+                                    <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog"> <i class="fas fa-trash"></i> </button>
                                 </td>
                             </tr>
                         }
