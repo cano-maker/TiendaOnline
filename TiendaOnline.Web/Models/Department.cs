@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TiendaOnline.Web.Models
 {
@@ -16,5 +17,8 @@ namespace TiendaOnline.Web.Models
 
         [DisplayName("Cities Number")]
         public int CitiesNumber => Cities == null ? 0 : Cities.Count;
+
+        [NotMapped]
+        public int IdCountry { get; set; }
     }
 }
