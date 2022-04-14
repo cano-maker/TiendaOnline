@@ -20,7 +20,9 @@ namespace TiendaOnline.Web.Controllers
         // GET: Countries
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Countries.ToListAsync());
+            return View(await _context.Countries
+                .Include(c => c.Departments)
+                .ToListAsync());
         }
 
         // GET: Countries/Details/5
@@ -32,6 +34,8 @@ namespace TiendaOnline.Web.Controllers
             }
 
             var country = await _context.Countries
+                .Include(_c => _c.Departments)
+                .ThenInclude(d => d.Cities)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (country == null)
             {
