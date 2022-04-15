@@ -416,6 +416,26 @@ namespace TiendaOnline.Web.Controllers
             return View(city);
         }
 
+        public async Task<IActionResult> DeleteCity(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            City city = await _context.Cities
+            .FirstOrDefaultAsync(m => m.Id == id);
+            if (city == null)
+            {
+                return NotFound();
+            }
+
+            Department department = await _context.Departments.FirstOrDefaultAsync(d =>
+           d.Cities.FirstOrDefault(c => c.Id == city.Id) != null);
+            _context.Cities.Remove(city);
+            await _context.SaveChangesAsync();
+            //return RedirectToAction($"{nameof(DetailsDepartment)}/{department.Id}");
+            return RedirectToAction($"{nameof(DetailsDepartment)}", new { id = department.Id});
+        }
 
 
     }
