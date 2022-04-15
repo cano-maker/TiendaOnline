@@ -26,6 +26,7 @@ namespace TiendaOnline.Web
 
             });
 
+            services.AddTransient<SeedDb>();
             services.AddControllersWithViews();
         }
 
