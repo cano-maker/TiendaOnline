@@ -344,7 +344,7 @@ namespace TiendaOnline.Web.Controllers
                     department.Cities.Add(city);
                     _context.Update(department);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction($"{nameof(DetailsDepartment)}", new { id = department.Id});
+                    return RedirectToAction($"{nameof(DetailsDepartment)}", new { id = department.Id });
                     //return RedirectToAction($"{nameof(DetailsDepartment)}/{department.Id}");
                 }
                 catch (DbUpdateException dbUpdateException)
@@ -366,6 +366,56 @@ namespace TiendaOnline.Web.Controllers
             }
             return View(city);
         }
+
+        public async Task<IActionResult> EditCity(int? id)
+        {
+            if (id == null)
+            {
+
+                return NotFound();
+            }
+            City city = await _context.Cities.FindAsync(id);
+            if (city == null)
+            {
+                return NotFound();
+            }
+            Department department = await _context.Departments.FirstOrDefaultAsync(d => d.Cities.FirstOrDefault(c => c.Id == city.Id) != null);
+            city.IdDepartment = department.Id;
+            return View(city);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditCity(City city)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(city);
+                    await _context.SaveChangesAsync();
+                    //return RedirectToAction($"{nameof(DetailsDepartment)}/{city.IdDepartment}");
+                    return RedirectToAction($"{nameof(DetailsDepartment)}", new { id = city.IdDepartment });
+                }
+                catch (DbUpdateException dbUpdateException)
+                {
+                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                    {
+                        ModelState.AddModelError(string.Empty, "There are a record with the same name.");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty,
+                       dbUpdateException.InnerException.Message);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError(string.Empty, exception.Message);
+                }
+            }
+            return View(city);
+        }
+
 
 
     }
