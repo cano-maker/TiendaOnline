@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TiendaOnline.Web.Data;
-using TiendaOnline.Web.Models;
+using TiendaOnline.Web.Data.Entities;
 
 namespace TiendaOnline.Web.Controllers
 {
@@ -434,7 +434,7 @@ namespace TiendaOnline.Web.Controllers
             _context.Cities.Remove(city);
             await _context.SaveChangesAsync();
             //return RedirectToAction($"{nameof(DetailsDepartment)}/{department.Id}");
-            return RedirectToAction($"{nameof(DetailsDepartment)}", new { id = department.Id});
+            return RedirectToAction($"{nameof(DetailsDepartment)}", new { id = department.Id });
         }
 
 

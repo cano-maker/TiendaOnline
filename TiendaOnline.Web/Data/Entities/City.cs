@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TiendaOnline.Web.Models
+namespace TiendaOnline.Web.Data.Entities
 {
     public class City
     {

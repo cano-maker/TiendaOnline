@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TiendaOnline.Web.Models;
+using TiendaOnline.Web.Data.Entities;
 
 namespace TiendaOnline.Web.Data
 {

@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace TiendaOnline.Web.Models
+namespace TiendaOnline.Web.Data.Entities
 {
     public class Country
     {

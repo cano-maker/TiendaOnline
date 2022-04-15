@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace TiendaOnline.Web.Models
+namespace TiendaOnline.Web.Data.Entities
 {
     public class Category
     {

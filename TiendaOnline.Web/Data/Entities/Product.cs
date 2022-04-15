@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace TiendaOnline.Web.Models
+namespace TiendaOnline.Web.Data.Entities
 {
     public class Product
     {
