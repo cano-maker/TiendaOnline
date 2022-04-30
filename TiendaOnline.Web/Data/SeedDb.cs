@@ -2,18 +2,28 @@
 using System.Linq;
 using System.Threading.Tasks;
 using TiendaOnline.Web.Data.Entities;
+using TiendaOnline.Web.Enums;
+using TiendaOnline.Web.Interfaces;
 
 namespace TiendaOnline.Web.Data
 {
     public class SeedDb
     {
         private readonly DataContext _context;
-        public SeedDb(DataContext context) { _context = context; }
+        private readonly IUserHelper _userHelper;
+        public SeedDb(DataContext context, IUserHelper userHelper) 
+        {
+            _context = context;
+            _userHelper = userHelper;
+        }
         public async Task SeedAsync()
         {
             await _context.Database.EnsureCreatedAsync();
             await CheckCountriesAsync();
             await CheckCategoriesAsync();
+            await CheckRolesAsync();
+            await CheckUserAsync("99999999", "Fabio", "Cano", "fabio@gmail.com", "3256548952", "cr 56 7895", UserType.Admin);
+
         }
 
         private async Task CheckCategoriesAsync()
@@ -99,6 +109,41 @@ namespace TiendaOnline.Web.Data
             }
 
             await _context.SaveChangesAsync();
+        }
+
+        private async Task<User> CheckUserAsync(
+                                string document,
+                                string firstName,
+                                string lastName,
+                                string email,
+                                string phone,
+                                string address,
+                                UserType userType)
+        {
+            User user = await _userHelper.GetUserAsync(email);
+            if (user == null)
+            {
+                user = new User
+                {
+                    FirstName = firstName,
+                    LastName = lastName,
+                    Email = email,
+                    UserName = email,
+                    PhoneNumber = phone,
+                    Address = address,
+                    Document = document,
+                    City = _context.Cities.FirstOrDefault(),
+                    UserType = userType,
+                };
+                await _userHelper.AddUserAsync(user, "Itm2022**");
+                await _userHelper.AddUserToRoleAsync(user, userType.ToString());
+            }
+            return user;
+        }
+        private async Task CheckRolesAsync()
+        {
+            await _userHelper.CheckRoleAsync(UserType.Admin.ToString());
+            await _userHelper.CheckRoleAsync(UserType.User.ToString());
         }
     }
 
