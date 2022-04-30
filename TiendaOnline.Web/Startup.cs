@@ -46,6 +46,8 @@ namespace TiendaOnline.Web
                 cfg.Password.RequireUppercase = false;
             }).AddEntityFrameworkStores<DataContext>();
 
+            services.AddScoped<IBlobHelper, BlobHelper>();
+            services.AddScoped<ICombosHelper, CombosHelper>();
             services.AddTransient<SeedDb>();
             services.AddScoped<IUserHelper, UserHelper>();
             services.AddControllersWithViews();
