@@ -30,6 +30,12 @@ namespace TiendaOnline.Web
 
             });
 
+            services.ConfigureApplicationCookie(options =>
+             {
+                 options.LoginPath = "/Account/NotAuthorized";
+                 options.AccessDeniedPath = "/Account/NotAuthorized";
+             });
+
             services.AddIdentity<User, IdentityRole>(cfg =>
             {
                 cfg.User.RequireUniqueEmail = true;
@@ -58,11 +64,10 @@ namespace TiendaOnline.Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseStatusCodePagesWithReExecute("/error/{0}");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseAuthorization();
             app.UseAuthentication();
 
