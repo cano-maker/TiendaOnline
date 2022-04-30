@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -8,6 +9,7 @@ using TiendaOnline.Web.Data.Entities;
 
 namespace TiendaOnline.Web.Controllers
 {
+  
     public class CountriesController : Controller
     {
         private readonly DataContext _context;

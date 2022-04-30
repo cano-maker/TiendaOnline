@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using TiendaOnline.Web.Data.Entities;
+using TiendaOnline.Web.Models;
 
 namespace TiendaOnline.Web.Interfaces
 {
@@ -11,5 +12,7 @@ namespace TiendaOnline.Web.Interfaces
         Task CheckRoleAsync(string roleName);
         Task AddUserToRoleAsync(User user, string roleName);
         Task<bool> IsUserInRoleAsync(User user, string roleName);
+        Task<SignInResult> LoginAsync(LoginViewModel model);
+        Task LogoutAsync();
     }
 }

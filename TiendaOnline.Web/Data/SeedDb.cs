@@ -135,15 +135,16 @@ namespace TiendaOnline.Web.Data
                     City = _context.Cities.FirstOrDefault(),
                     UserType = userType,
                 };
-                await _userHelper.AddUserAsync(user, "Itm2022**");
+                await _userHelper.AddUserAsync(user, "123456");
                 await _userHelper.AddUserToRoleAsync(user, userType.ToString());
+
             }
             return user;
         }
         private async Task CheckRolesAsync()
         {
-            await _userHelper.CheckRoleAsync(UserType.Admin.ToString());
-            await _userHelper.CheckRoleAsync(UserType.User.ToString());
+            await _userHelper.CheckRoleAsync(nameof(UserType.Admin));
+            await _userHelper.CheckRoleAsync(nameof(UserType.User));
         }
     }
 
