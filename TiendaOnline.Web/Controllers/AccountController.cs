@@ -1,25 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using TiendaOnline.Web.Data;
+using TiendaOnline.Web.Data.Entities;
+using TiendaOnline.Web.Enums;
 using TiendaOnline.Web.Interfaces;
 using TiendaOnline.Web.Models;
-using System.Linq;
-using TiendaOnline.Web.Data;
-using System;
-using TiendaOnline.Web.Enums;
-using TiendaOnline.Web.Data.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace TiendaOnline.Web.Controllers
 {
- 
+
     public class AccountController : Controller
     {
         private readonly IUserHelper _userHelper;
         private readonly DataContext _context;
         private readonly ICombosHelper _combosHelper;
         private readonly IBlobHelper _blobHelper;
-        public AccountController(IUserHelper userHelper, 
-            DataContext context, 
+        public AccountController(IUserHelper userHelper,
+            DataContext context,
             ICombosHelper combosHelper,
             IBlobHelper blobHelper)
         {
@@ -52,7 +54,16 @@ namespace TiendaOnline.Web.Controllers
 
                     return RedirectToAction("Index", "Home");
                 }
-                ModelState.AddModelError(string.Empty, "Email o contraseña incorrectos.");
+
+                if (result.IsLockedOut)
+                {
+                    ModelState.AddModelError(string.Empty, "Ha superado el máximo número de intentos, su cuenta está bloqueada, intente de nuevo en 5 minutos.");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Email o contraseña incorrectos.");
+                }
+
             }
             return View(model);
         }
@@ -83,14 +94,14 @@ namespace TiendaOnline.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(AddUserViewModel model)
         {
-            
-         if (ModelState.IsValid)
+
+            if (ModelState.IsValid)
             {
                 Guid imageId = Guid.Empty;
-                if (model.ImageFile != null)
-                {
-                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
-                }
+                //if (model.ImageFile != null)
+                //{
+                //    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
+                //}
                 User user = await _userHelper.AddUserAsync(model, imageId);
                 if (user == null)
                 {
@@ -128,13 +139,93 @@ namespace TiendaOnline.Web.Controllers
             .Include(s => s.Cities)
             .FirstOrDefault(s => s.Id == DepartmentId);
             if (Department == null)
-                
-         {
+
+            {
                 return null;
             }
             return Json(Department.Cities.OrderBy(c => c.Name));
         }
 
+        public async Task<IActionResult> ChangeUser()
+        {
+            User user = await _userHelper.GetUserAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            EditUserViewModel model = new EditUserViewModel
+            {
+                Address = user.Address,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                PhoneNumber = user.PhoneNumber,
+                ImageId = user.ImageId,
+                Cities = await _combosHelper.GetComboCitiesAsync(user.City.Department.Id),
+                CityId = user.City.Id,
+                Countries = await _combosHelper.GetComboCountriesAsync(),
+                CountryId = user.City.Department.Country.Id,
+                DepartmentId = user.City.Department.Id,
+                Departments = await _combosHelper.GetComboDepartmentsAsync(user.City.Department.Country.Id),
+                Id = user.Id,
+                Document = user.Document
+            };
+            return View(model);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeUser(EditUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Guid imageId = model.ImageId;
+                if (model.ImageFile != null)
+                {
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
+                }
+                User user = await _userHelper.GetUserAsync(User.Identity.Name);
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.Address = model.Address;
+                user.PhoneNumber = model.PhoneNumber;
+                user.ImageId = imageId;
+                user.City = await _context.Cities.FindAsync(model.CityId);
+                user.Document = model.Document;
+                await _userHelper.UpdateUserAsync(user);
+                return RedirectToAction("Index", "Home");
+            }
+            return View(model);
+        }
+
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserAsync(User.Identity.Name);
+                if (user != null)
+                {
+                    var result = await _userHelper.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("ChangeUser");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, result.Errors.FirstOrDefault().Description);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "User no found.");
+                }
+            }
+            return View(model);
+        }
 
     }
 }

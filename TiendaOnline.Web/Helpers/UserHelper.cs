@@ -15,8 +15,8 @@ namespace TiendaOnline.Web.Helpers
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<User> _signInManager;
-        public UserHelper(DataContext context, 
-            UserManager<User> userManager, 
+        public UserHelper(DataContext context,
+            UserManager<User> userManager,
             RoleManager<IdentityRole> roleManager,
             SignInManager<User> signInManager)
         {
@@ -26,7 +26,7 @@ namespace TiendaOnline.Web.Helpers
             _signInManager = signInManager;
 
         }
-    public async Task<IdentityResult> AddUserAsync(User user, string password)
+        public async Task<IdentityResult> AddUserAsync(User user, string password)
         {
             return await _userManager.CreateAsync(user, password);
         }
@@ -49,6 +49,8 @@ namespace TiendaOnline.Web.Helpers
         {
             return await _context.Users
             .Include(u => u.City)
+            .ThenInclude(c => c.Department)
+            .ThenInclude(s => s.Country)
             .FirstOrDefaultAsync(u => u.Email == email);
         }
         public async Task<bool> IsUserInRoleAsync(User user, string roleName)
@@ -62,7 +64,7 @@ namespace TiendaOnline.Web.Helpers
             model.Username,
             model.Password,
             model.RememberMe,
-            false);
+            true);
         }
         public async Task LogoutAsync()
         {
@@ -93,6 +95,25 @@ namespace TiendaOnline.Web.Helpers
             await AddUserToRoleAsync(newUser, user.UserType.ToString());
             return newUser;
         }
+
+        public async Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword)
+        {
+            return await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+        }
+        public async Task<IdentityResult> UpdateUserAsync(User user)
+        {
+            return await _userManager.UpdateAsync(user);
+        }
+        public async Task<User> GetUserAsync(Guid userId)
+        {
+            return await _context.Users
+            .Include(u => u.City)
+            .ThenInclude(c => c.Department)
+            .ThenInclude(s => s.Country)
+            .FirstOrDefaultAsync(u => u.Id == userId.ToString());
+        }
+
+
     }
 
 }
