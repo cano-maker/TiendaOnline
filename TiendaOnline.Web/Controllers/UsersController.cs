@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using TiendaOnline.Web.Common;
 using TiendaOnline.Web.Data;
 using TiendaOnline.Web.Data.Entities;
 using TiendaOnline.Web.Enums;
@@ -18,15 +18,18 @@ namespace TiendaOnline.Web.Controllers
         private readonly DataContext _context;
         private readonly ICombosHelper _combosHelper;
         private readonly IBlobHelper _blobHelper;
-        public UsersController(IUserHelper userHelper, 
-            DataContext context, 
+        private readonly IMailHelper _mailHelper;
+        public UsersController(IUserHelper userHelper,
+            DataContext context,
             ICombosHelper combosHelper,
-            IBlobHelper blobHelper)
+            IBlobHelper blobHelper,
+            IMailHelper mailHelper)
         {
             _userHelper = userHelper;
             _context = context;
             _combosHelper = combosHelper;
             _blobHelper = blobHelper;
+            _mailHelper = mailHelper;
         }
         public async Task<IActionResult> Index()
         {
@@ -35,7 +38,7 @@ namespace TiendaOnline.Web.Controllers
             .ThenInclude(c => c.Department)
             .ThenInclude(s => s.Country)
             .ToListAsync());
-            
+
         }
         public async Task<IActionResult> Create()
         {
@@ -56,17 +59,36 @@ namespace TiendaOnline.Web.Controllers
             if (ModelState.IsValid)
             {
                 Guid imageId = Guid.Empty;
-               // if (model.ImageFile != null)
-               // {
-               //     imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
-               // }
+                // if (model.ImageFile != null)
+                // {
+                //     imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
+                // }
                 User user = await _userHelper.AddUserAsync(model, imageId);
                 if (user == null)
                 {
                     ModelState.AddModelError(string.Empty, "Este correo ya está siendo usado.");
                     return View(model);
                 }
-                return RedirectToAction(nameof(Index));
+                string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                string tokenLink = Url.Action("ConfirmEmail", "Account", new
+                {
+                    userid = user.Id,
+                    token = myToken
+                }, protocol: HttpContext.Request.Scheme);
+                Response response = _mailHelper.SendMail(
+                $"{model.FirstName} {model.LastName}",
+                model.Username,
+                "Shopping - Confirmación de Email",
+                $"<h1>Shopping - Confirmación de Email</h1>" +
+                $"Para habilitar el usuario por favor hacer clicn en el siguiente link:, " +
+                $"<p><a href = \"{tokenLink}\">Confirmar Email</a></p>");
+                if (response.IsSuccess)
+                {
+                    ViewBag.Message = "Las instrucciones para habilitar el usuario han sido enviadas al correo.";
+                    return View(model);
+                }
+                ModelState.AddModelError(string.Empty, response.Message);
+
             }
             return View(model);
         }
@@ -80,7 +102,7 @@ namespace TiendaOnline.Web.Controllers
                 return null;
             }
             return Json(country.Departments.OrderBy(d => d.Name));
-            
+
         }
         public JsonResult? GetCities(int DepartmentId)
         {
