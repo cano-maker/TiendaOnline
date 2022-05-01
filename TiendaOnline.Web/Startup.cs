@@ -38,6 +38,8 @@ namespace TiendaOnline.Web
 
             services.AddIdentity<User, IdentityRole>(cfg =>
             {
+                cfg.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+                cfg.SignIn.RequireConfirmedEmail = true;
                 cfg.User.RequireUniqueEmail = true;
                 cfg.Password.RequireDigit = false;
                 cfg.Password.RequiredUniqueChars = 0;
@@ -47,8 +49,10 @@ namespace TiendaOnline.Web
                 cfg.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 cfg.Lockout.MaxFailedAccessAttempts = 3;
                 cfg.Lockout.AllowedForNewUsers = true;
-            }).AddEntityFrameworkStores<DataContext>();
+            }).AddDefaultTokenProviders()
+                .AddEntityFrameworkStores<DataContext>();
 
+            services.AddScoped<IMailHelper, MailHelper>();
             services.AddScoped<IBlobHelper, BlobHelper>();
             services.AddScoped<ICombosHelper, CombosHelper>();
             services.AddTransient<SeedDb>();
