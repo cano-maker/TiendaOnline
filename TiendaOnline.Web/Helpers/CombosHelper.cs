@@ -35,7 +35,7 @@ namespace TiendaOnline.Web.Helpers
         public async Task<IEnumerable<SelectListItem>> GetComboCitiesAsync(int DepartmentId)
         {
             List<SelectListItem> list = await _context.Cities
-            .Where(x => x.IdDepartment == DepartmentId)
+            .Where(x => x.Department.Id == DepartmentId)
             .Select(x => new SelectListItem
             {
                 Text = x.Name,
@@ -69,7 +69,7 @@ namespace TiendaOnline.Web.Helpers
         public async Task<IEnumerable<SelectListItem>> GetComboDepartmentsAsync(int countryId)
         {
             List<SelectListItem> list = await _context.Departments
-            .Where(x => x.IdCountry == countryId)
+            .Where(x => x.Country.Id == countryId)
             .Select(x => new SelectListItem
             {
                 Text = x.Name,

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace TiendaOnline.Web.Data.Entities
 {
@@ -13,5 +14,8 @@ namespace TiendaOnline.Web.Data.Entities
 
         [NotMapped]
         public int IdDepartment { get; set; }
+
+        [JsonIgnore]
+        public Department Department { get; set; }
     }
 }

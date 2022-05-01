@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace TiendaOnline.Web.Data.Entities
 {
@@ -20,5 +21,8 @@ namespace TiendaOnline.Web.Data.Entities
 
         [NotMapped]
         public int IdCountry { get; set; }
+
+        [JsonIgnore]
+        public Country Country { get; set; }
     }
 }
