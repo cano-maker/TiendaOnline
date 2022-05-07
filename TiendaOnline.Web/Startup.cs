@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Globalization;
 using System.Text;
 using TiendaOnline.Web.Data;
 using TiendaOnline.Web.Data.Entities;
@@ -102,6 +104,14 @@ namespace TiendaOnline.Web
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("en-US"),
+                SupportedCultures = new[] { new CultureInfo("en-US") },
+                SupportedUICultures = new[] { new CultureInfo("en-US") }
+            });
+
         }
     }
 }

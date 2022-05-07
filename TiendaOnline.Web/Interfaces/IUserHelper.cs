@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using TiendaOnline.Web.Data.Entities;
+using TiendaOnline.Web.Enums;
 using TiendaOnline.Web.Models;
 
 namespace TiendaOnline.Web.Interfaces
@@ -24,6 +25,6 @@ namespace TiendaOnline.Web.Interfaces
         Task<string> GeneratePasswordResetTokenAsync(User user);
         Task<IdentityResult> ResetPasswordAsync(User user, string token, string password);
         Task<SignInResult> ValidatePasswordAsync(User user, string password);
-
+        Task<User> AddUserAsync(AddUserViewModel model, Guid imageId, UserType userType);
     }
 }

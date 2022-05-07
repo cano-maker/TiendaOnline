@@ -48,7 +48,7 @@ namespace TiendaOnline.Web.Controllers
                 Countries = await _combosHelper.GetComboCountriesAsync(),
                 Departments = await _combosHelper.GetComboDepartmentsAsync(1),
                 Cities = await _combosHelper.GetComboCitiesAsync(1),
-                UserType = UserType.Admin,
+                //UserType = UserType.Admin,
             };
             return View(model);
         }

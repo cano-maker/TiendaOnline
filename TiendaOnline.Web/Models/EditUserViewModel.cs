@@ -9,49 +9,60 @@ namespace TiendaOnline.Web.Models
     public class EditUserViewModel
     {
         public string Id { get; set; }
-        [Display(Name = "Documento")]
-        [MaxLength(20, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+
+        [MaxLength(20)]
+        [Required]
         public string Document { get; set; }
-        [Display(Name = "Nombres")]
-        [MaxLength(50, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+
+        [Display(Name = "First Name")]
+        [MaxLength(50)]
+        [Required]
         public string FirstName { get; set; }
-        [Display(Name = "Apellidos")]
-        [MaxLength(50, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+
+        [Display(Name = "Last Name")]
+        [MaxLength(50)]
+        [Required]
         public string LastName { get; set; }
-        [Display(Name = "Dirección")]
-        [MaxLength(200, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+
+        [MaxLength(100)]
         public string Address { get; set; }
-        [Display(Name = "Teléfono")]
-        [MaxLength(20, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+
+        [Display(Name = "Phone Number")]
+        [MaxLength(20)]
         public string PhoneNumber { get; set; }
-        [Display(Name = "Foto")]
-        public Guid ImageId { get; set; }
-        //TODO: Pending to put the correct paths
-        [Display(Name = "Foto")]
-        public string ImageFullPath => ImageId == Guid.Empty
-        ? $"https://localhost:7057/images/noimage.png"
-        : $"https://tiendaonline.blob.core.windows.net/users/{ImageId}";
+
         [Display(Name = "Image")]
-        public IFormFile? ImageFile { get; set; }
-        [Display(Name = "País")]
-        [Range(1, int.MaxValue, ErrorMessage = "Debes de seleccionar un país.")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        public Guid ImageId { get; set; }
+
+        [Display(Name = "Image")]
+        public string ImageFullPath => ImageId == Guid.Empty
+            ? $"https://TiendaOnlineweb.azurewebsites.net/images/noimage.png"
+            : $"https://TiendaOnline.blob.core.windows.net/users/{ImageId}";
+
+        [Display(Name = "Image")]
+        public IFormFile ImageFile { get; set; }
+
+        [Required]
+        [Display(Name = "Country")]
+        [Range(1, int.MaxValue, ErrorMessage = "You must select a country.")]
         public int CountryId { get; set; }
+
         public IEnumerable<SelectListItem> Countries { get; set; }
-        [Display(Name = "Departmento ")]
-        [Range(1, int.MaxValue, ErrorMessage = "Debes de seleccionar un departamento/estado.")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+
+        [Required]
+        [Display(Name = "Department")]
+        [Range(1, int.MaxValue, ErrorMessage = "You must select a department.")]
         public int DepartmentId { get; set; }
+
         public IEnumerable<SelectListItem> Departments { get; set; }
-        [Display(Name = "Ciuadad")]
-        [Range(1, int.MaxValue, ErrorMessage = "Debes de seleccionar una ciudad.")]
+
+        [Required]
+        [Display(Name = "City")]
+        [Range(1, int.MaxValue, ErrorMessage = "You must select a city.")]
         public int CityId { get; set; }
+
         public IEnumerable<SelectListItem> Cities { get; set; }
     }
+
 
 }

@@ -4,10 +4,10 @@ namespace TiendaOnline.Web.Models
 {
     public class RecoverPasswordViewModel
     {
-        [Display(Name = "Email")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        [EmailAddress(ErrorMessage = "Debes ingresar un correo válido.")]
+        [Required]
+        [EmailAddress]
         public string Email { get; set; }
     }
+
 
 }

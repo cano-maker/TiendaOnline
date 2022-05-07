@@ -4,22 +4,25 @@ namespace TiendaOnline.Web.Models
 {
     public class ChangePasswordViewModel
     {
+        [Display(Name = "Current password")]
+        [Required(ErrorMessage = "The field {0} is mandatory.")]
         [DataType(DataType.Password)]
-        [Display(Name = "Contraseña actual")]
-        [StringLength(20, MinimumLength = 6, ErrorMessage = "El campo {0} debe tener entre {2} y {1} carácteres.")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        [StringLength(20, MinimumLength = 6, ErrorMessage = "The {0} field must contain between {2} and {1} characters.")]
         public string OldPassword { get; set; }
+
+        [Display(Name = "New password")]
+        [Required(ErrorMessage = "The field {0} is mandatory.")]
         [DataType(DataType.Password)]
-        [Display(Name = "Nueva contraseña")]
-        [StringLength(20, MinimumLength = 6, ErrorMessage = "El campo {0} debe tener entre {2} y {1} carácteres.")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        [StringLength(20, MinimumLength = 6, ErrorMessage = "The {0} field must contain between {2} and {1} characters.")]
         public string NewPassword { get; set; }
-        [Compare("NewPassword", ErrorMessage = "La nueva contraseña y la confirmación no son iguales.")]
+
+        [Display(Name = "Password confirm")]
+        [Required(ErrorMessage = "The field {0} is mandatory.")]
         [DataType(DataType.Password)]
-        [Display(Name = "Confirmación nueva contraseña")]
-        [StringLength(20, MinimumLength = 6, ErrorMessage = "El campo {0} debe tener entre {2} y {1} carácteres.")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        [StringLength(20, MinimumLength = 6, ErrorMessage = "The {0} field must contain between {2} and {1} characters.")]
+        [Compare("NewPassword")]
         public string Confirm { get; set; }
     }
+
 
 }
