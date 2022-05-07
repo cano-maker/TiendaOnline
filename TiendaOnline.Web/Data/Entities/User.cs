@@ -7,38 +7,43 @@ namespace TiendaOnline.Web.Data.Entities
 {
     public class User : IdentityUser
     {
-        [Display(Name = "Documento")]
-        [MaxLength(20, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        [MaxLength(20)]
+        [Required]
         public string Document { get; set; }
-        [Display(Name = "Nombres")]
-        [MaxLength(50, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public string FirstName { get; set; }
-        [Display(Name = "Apellidos")]
-        [MaxLength(50, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public string LastName { get; set; }
-        [Display(Name = "Dirección")]
-        [MaxLength(200, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
 
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        [Display(Name = "First Name")]
+        [MaxLength(50)]
+        [Required]
+        public string FirstName { get; set; }
+
+        [Display(Name = "Last Name")]
+        [MaxLength(50)]
+        [Required]
+        public string LastName { get; set; }
+
+        [MaxLength(100)]
         public string Address { get; set; }
-        [Display(Name = "Foto")]
+
+        [Display(Name = "Image")]
         public Guid ImageId { get; set; }
+
         //TODO: Pending to put the correct paths
-        [Display(Name = "Foto")]
+        [Display(Name = "Image")]
         public string ImageFullPath => ImageId == Guid.Empty
-        ? $"https://localhost:7057/images/noimage.png"
-        : $"https://shoppingprep.blob.core.windows.net/users/{ImageId}";
-        [Display(Name = "Tipo de usuario")]
+            ? $"https://localhost:44390/images/noimage.png"
+            : $"https://TiendaOnline.blob.core.windows.net/users/{ImageId}";
+
+        [Display(Name = "User Type")]
         public UserType UserType { get; set; }
-        [Display(Name = "Ciudad")]
+
         public City City { get; set; }
-        [Display(Name = "Usuario")]
+
+        [Display(Name = "User")]
         public string FullName => $"{FirstName} {LastName}";
-        [Display(Name = "Usuario")]
+
+        [Display(Name = "User")]
         public string FullNameWithDocument => $"{FirstName} {LastName} - {Document}";
     }
+
 
 }
