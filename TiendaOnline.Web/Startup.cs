@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Text;
 using TiendaOnline.Web.Data;
 using TiendaOnline.Web.Data.Entities;
 using TiendaOnline.Web.Helpers;
@@ -49,8 +51,21 @@ namespace TiendaOnline.Web
                 cfg.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 cfg.Lockout.MaxFailedAccessAttempts = 3;
                 cfg.Lockout.AllowedForNewUsers = true;
-            }).AddDefaultTokenProviders()
+            })
+                .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<DataContext>();
+
+            services.AddAuthentication()
+                    .AddCookie()
+                    .AddJwtBearer(cfg =>
+                            {
+                                cfg.TokenValidationParameters = new TokenValidationParameters
+                                {
+                                    ValidIssuer = Configuration["Tokens:Issuer"],
+                                    ValidAudience = Configuration["Tokens:Audience"],
+                                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
+                                };
+                            });
 
             services.AddScoped<IMailHelper, MailHelper>();
             services.AddScoped<IBlobHelper, BlobHelper>();
