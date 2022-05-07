@@ -10,6 +10,8 @@ namespace TiendaOnline.Web.Interfaces
         Task<IEnumerable<SelectListItem>> GetComboCountriesAsync();
         Task<IEnumerable<SelectListItem>> GetComboDepartmentsAsync(int countryId);
         Task<IEnumerable<SelectListItem>> GetComboCitiesAsync(int DepartmentId);
+
+        IEnumerable<SelectListItem> GetComboCategories();
     }
 
 }

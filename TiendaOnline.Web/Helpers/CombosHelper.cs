@@ -84,5 +84,25 @@ namespace TiendaOnline.Web.Helpers
             });
             return list;
         }
+
+        public IEnumerable<SelectListItem> GetComboCategories()
+        {
+            List<SelectListItem> list = _context.Categories.Select(t => new SelectListItem
+            {
+                Text = t.Name,
+                Value = $"{t.Id}"
+            })
+                .OrderBy(t => t.Text)
+                .ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "[Select a category...]",
+                Value = "0"
+            });
+
+            return list;
+        }
+
     }
 }
