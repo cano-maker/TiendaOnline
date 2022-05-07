@@ -19,6 +19,7 @@ namespace TiendaOnline.Web.Data.Entities
         [DisplayName("Cities Number")]
         public int CitiesNumber => Cities == null ? 0 : Cities.Count;
 
+        [JsonIgnore]
         [NotMapped]
         public int IdCountry { get; set; }
 

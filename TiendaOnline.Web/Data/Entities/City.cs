@@ -12,6 +12,7 @@ namespace TiendaOnline.Web.Data.Entities
         [Required]
         public string Name { get; set; }
 
+        [JsonIgnore]
         [NotMapped]
         public int IdDepartment { get; set; }
 
