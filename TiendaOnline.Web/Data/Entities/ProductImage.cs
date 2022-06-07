@@ -13,7 +13,7 @@ namespace TiendaOnline.Web.Data.Entities
         //TODO: Pending to put the correct paths
         [Display(Name = "Image")]
         public string ImageFullPath => ImageId == Guid.Empty
-        ? $"https://localhost:44390/images/noimage.png"
+        ? $"https://tiendaonline.azurewebsites.net/images/noimage.png"
         : $"https://Tiendaonline.Web.blob.core.windows.net/products/{ImageId}";
     }
 

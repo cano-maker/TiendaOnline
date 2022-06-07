@@ -34,7 +34,7 @@ namespace TiendaOnline.Web.Data.Entities
 
         [Display(Name = "Image")]
         public string ImageFullPath => ProductImages == null || ProductImages.Count == 0
-        ? $"https://localhost:44390/images/noimage.png"
+        ? $"https://tiendaonline.azurewebsites.net/images/noimage.png"
         : ProductImages.FirstOrDefault().ImageFullPath;
     }
 
